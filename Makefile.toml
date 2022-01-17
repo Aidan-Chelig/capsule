@@ -1,0 +1,34 @@
+[env]
+ENV_DIR = {source="${CARGO_MAKE_PROFILE}", default_value = "debug", mapping = {release = "release"}}
+CARGO_TARGET_DIR = {value = "target", condition = {env_not_set = ["CARGO_TARGET_DIR"]}}
+TARGET_DIR = "wasm/target"
+CARGO_WASM_PATH = "${CARGO_TARGET_DIR}/wasm32-unknown-unknown/${ENV_DIR}/capsule.wasm"
+CARGO_PROFILE = "dev"
+CARGO_MANIFEST_DIR = "${CARGO_MAKE_WORKING_DIRECTORY}"
+ARG1 = "${@}"
+
+[env.release]
+CARGO_RELEASE_ARGS = "--release"
+
+[tasks.install-wasm-bindgen-cli]
+install_crate = {crate_name = "wasm-bindgen-cli", binary = "wasm-bindgen", test_arg="--help"}
+
+[tasks.install-basic-http-server]
+install_crate = {crate_name = "basic-http-server", binary = "basic-http-server", test_arg="--help"}
+
+[tasks.cargo-build]
+args = ["build", "--target", "wasm32-unknown-unknown", "--${ENV_DIR}"]
+command = "cargo"
+
+[tasks.build-bind]
+args = ["--remove-name-section", "--remove-producers-section", "--out-dir", "${TARGET_DIR}", "--out-name", "wasm", "--target", "web", "--no-typescript", "${CARGO_WASM_PATH}"]
+command = "wasm-bindgen"
+dependencies = ["cargo-build", "install-wasm-bindgen-cli"]
+
+[tasks.serve]
+command = "basic-http-server"
+args = ["wasm/"]
+dependencies = ["build-bind", "install-basic-http-server"]
+
+[tasks.test]
+disabled = true

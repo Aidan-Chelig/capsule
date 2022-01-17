@@ -1,14 +1,11 @@
-mod player;
-
 use bevy::prelude::*;
+mod player;
 use player::MovementSettings;
 use player::PlayerPlugin;
 
-//From bevy examples:
-//https://github.com/bevyengine/bevy/blob/latest/examples/3d/3d_scene.rs
 
 fn main() {
-    App::build()
+    App::new()
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_plugin(PlayerPlugin)
@@ -20,6 +17,8 @@ fn main() {
         .run();
 }
 
+
+//test
 /// set up a simple 3D scene
 fn setup(
     mut commands: Commands,
@@ -29,18 +28,18 @@ fn setup(
     // plane
     commands.spawn_bundle(PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Plane { size: 5.0 })),
-        material: materials.add(Color::rgb(0.3, 0.5, 0.3).into()),
+        material: materials.add(Color::rgb(1.0, 1.0, 0.4).into()),
         ..Default::default()
     });
     // cube
     commands.spawn_bundle(PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
-        material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
+        material: materials.add(Color::rgb(1.0, 0.0, 0.0).into()),
         transform: Transform::from_xyz(0.0, 0.5, 0.0),
         ..Default::default()
     });
     // light
-    commands.spawn_bundle(LightBundle {
+    commands.spawn_bundle(PointLightBundle {
         transform: Transform::from_xyz(4.0, 8.0, 4.0),
         ..Default::default()
     });

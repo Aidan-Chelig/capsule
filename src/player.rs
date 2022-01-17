@@ -1,7 +1,8 @@
 use bevy::app::{Events, ManualEventReader};
 use bevy::input::mouse::MouseMotion;
-use bevy::app::AppBuilder;
 use bevy::prelude::*;
+
+
 
 /// Keeps track of mouse motion events, pitch, and yaw
 #[derive(Default)]
@@ -27,6 +28,7 @@ impl Default for MovementSettings {
 }
 
 /// Used in queries when you want flycams and not other cameras
+#[derive(Component)]
 pub struct FlyCam;
 
 /// Grabs/ungrabs mouse cursor
@@ -118,7 +120,7 @@ fn player_look(
 
 fn cursor_grab(keys: Res<Input<KeyCode>>, mut windows: ResMut<Windows>) {
     let window = windows.get_primary_mut().unwrap();
-    if keys.just_pressed(KeyCode::Escape) {
+    if keys.just_pressed(KeyCode::LControl) {
         toggle_grab_cursor(window);
     }
  }
@@ -126,7 +128,7 @@ fn cursor_grab(keys: Res<Input<KeyCode>>, mut windows: ResMut<Windows>) {
 /// Contains everything needed to add first-person fly camera behavior to your game
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.init_resource::<InputState>()
             .init_resource::<MovementSettings>()
             .add_startup_system(setup_player.system())

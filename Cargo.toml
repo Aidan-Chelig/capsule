@@ -2,11 +2,13 @@
 name = "capsule"
 version = "0.1.0"
 edition = "2018"
+resolver = "2"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = {version = "0.5"}
+#cpal = { version = "*", features = ["jack"] }
+bevy = {version = "0.6"}
 
 [target.'cfg(target_os = "linux")'.dev-dependencies]
-bevy = { version = "0.5", default-features = false, features = [ "x11", "wayland" ] }
+bevy = { version = "0.6", default-features = false}

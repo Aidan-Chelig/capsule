@@ -1,13 +1,24 @@
 # RUST
-{ pkgs ? import <nixpkgs> { } }:
 
-with pkgs;
+let
+  moz_overlay = import (builtins.fetchTarball https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz);
+  nixpkgs = import <nixpkgs> { overlays = [ moz_overlay ]; };
+in
+
+with nixpkgs;
 
 mkShell {
   name = "rust";
-  buildInputs = [ rustfmt rustc cargo clippy pkgconfig udev alsaLib lutris
-    x11 xorg.libXcursor xorg.libXrandr xorg.libXi
-    vulkan-tools vulkan-headers vulkan-loader vulkan-validation-layers];
+  #buildInputs = [ rustc cargo cargo-make openssl rustup lld rust-analyzer rustfmt clippy pkgconfig ];
+  buildInputs = [ cargo-make watchexec clippy rustfmt rust-analyzer openssl lld pkgconfig
+  (latest.rustChannels.stable.rust.override {
+    targets = ["wasm32-unknown-unknown"];
+  })
+  latest.rustChannels.stable.cargo
+  latest.rustChannels.stable.rust-src
+  ];
 
-  RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+  shellHook = ''
+    export PATH=$PATH:~/.cargo/bin
+  '';
 }
