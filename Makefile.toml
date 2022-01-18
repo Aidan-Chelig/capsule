@@ -30,5 +30,12 @@ command = "basic-http-server"
 args = ["wasm/"]
 dependencies = ["build-bind", "install-basic-http-server"]
 
+[tasks.watch-build]
+command = "watchexec"
+args = ["-w", "src/", "--restart", "cargo make --profile release build-bind", "-i wasm/"]
+
+[tasks.dev]
+run_task = { name = ["watch-build", "serve"], parallel = true }
+
 [tasks.test]
 disabled = true

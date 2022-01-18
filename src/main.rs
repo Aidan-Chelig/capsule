@@ -1,8 +1,8 @@
-use bevy::prelude::*;
+pub use bevy::prelude::*;
+
 mod player;
 use player::MovementSettings;
 use player::PlayerPlugin;
-
 
 fn main() {
     App::new()
@@ -33,7 +33,7 @@ fn setup(
     });
     // cube
     commands.spawn_bundle(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
+        mesh: meshes.add(Mesh::from(shape::Cube { size: 0.4 })),
         material: materials.add(Color::rgb(1.0, 0.0, 0.0).into()),
         transform: Transform::from_xyz(0.0, 0.5, 0.0),
         ..Default::default()
