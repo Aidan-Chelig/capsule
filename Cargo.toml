@@ -9,6 +9,9 @@ resolver = "2"
 [dependencies]
 #cpal = { version = "*", features = ["jack"] }
 bevy = {version = "0.6"}
+wasm-bindgen = {version = "0.2.78"}
+web-sys = {version = "0.3.55", features = ["WebSocket", "ErrorEvent", "MessageEvent", "BinaryType", "ProgressEvent", "Blob", "FileReader"]}
+js-sys = {version = "0.3.55"}
 
 [target.'cfg(target_os = "linux")'.dev-dependencies]
 bevy = { version = "0.6", default-features = false}
