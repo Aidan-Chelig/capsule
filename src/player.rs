@@ -102,11 +102,9 @@ fn player_look(
     let window = windows.get_primary().unwrap();
     for (_camera, mut transform) in query.iter_mut() {
         for ev in state.reader_motion.iter(&motion) {
-            if state.last_delta == ev.delta {
-                return
-            }
             if window.cursor_locked() {
-                state.last_delta = ev.delta;
+                println!("{:?}", ev.delta);
+
                 // Using smallest of height or width ensures equal vertical and horizontal sensitivity
                 let window_scale = window.height().min(window.width());
                 state.pitch -= (settings.sensitivity * ev.delta.y * window_scale).to_radians();
