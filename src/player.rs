@@ -7,6 +7,7 @@ use bevy::prelude::*;
 /// Keeps track of mouse motion events, pitch, and yaw
 #[derive(Default)]
 struct InputState {
+    last_delta: Vec2,
     reader_motion: ManualEventReader<MouseMotion>,
     pitch: f32,
     yaw: f32,
@@ -101,10 +102,13 @@ fn player_look(
     let window = windows.get_primary().unwrap();
     for (_camera, mut transform) in query.iter_mut() {
         for ev in state.reader_motion.iter(&motion) {
+            if state.last_delta == ev.delta {
+                return
+            }
             if window.cursor_locked() {
+                state.last_delta = ev.delta;
                 // Using smallest of height or width ensures equal vertical and horizontal sensitivity
                 let window_scale = window.height().min(window.width());
-
                 state.pitch -= (settings.sensitivity * ev.delta.y * window_scale).to_radians();
                 state.yaw -= (settings.sensitivity * ev.delta.x * window_scale).to_radians();
             }
@@ -112,8 +116,10 @@ fn player_look(
             state.pitch = state.pitch.clamp(-1.54, 1.54);
 
             // Order is important to prevent unintended roll
-            transform.rotation = Quat::from_axis_angle(Vec3::Y, state.yaw)
-                * Quat::from_axis_angle(Vec3::X, state.pitch);
+            let new_transform = Quat::from_axis_angle(Vec3::Y, state.yaw) * Quat::from_axis_angle(Vec3::X, state.pitch);
+            if transform.rotation != new_transform {
+                transform.rotation = new_transform;
+            }
         }
     }
 }
