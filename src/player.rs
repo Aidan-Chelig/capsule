@@ -1,4 +1,5 @@
 use bevy::app::{Events, ManualEventReader};
+use bevy::core::FixedTimestep;
 use bevy::input::mouse::MouseMotion;
 use bevy::prelude::*;
 
@@ -135,6 +136,7 @@ impl Plugin for PlayerPlugin {
             .init_resource::<MovementSettings>()
             .add_startup_system(setup_player.system())
             .add_startup_system(initial_grab_cursor.system())
+            .add_system_set(SystemSet::new().with_run_criteria(FixedTimestep::step(0.017)))
             .add_system(player_move.system())
             .add_system(player_look.system())
             .add_system(cursor_grab.system());
