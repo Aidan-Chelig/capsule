@@ -7,7 +7,6 @@ use bevy::prelude::*;
 /// Keeps track of mouse motion events, pitch, and yaw
 #[derive(Default)]
 struct InputState {
-    last_delta: Vec2,
     reader_motion: ManualEventReader<MouseMotion>,
     pitch: f32,
     yaw: f32,
@@ -103,7 +102,6 @@ fn player_look(
     for (_camera, mut transform) in query.iter_mut() {
         for ev in state.reader_motion.iter(&motion) {
             if window.cursor_locked() {
-                println!("{:?}", ev.delta);
 
                 // Using smallest of height or width ensures equal vertical and horizontal sensitivity
                 let window_scale = window.height().min(window.width());
