@@ -9,6 +9,9 @@ mod netclient;
 use netclient::NetPlugin;
 
 mod player;
+use bevy_egui::egui::Color32;
+use bevy_egui::{egui, EguiContext};
+use bevy_egui::EguiPlugin;
 use player::MovementSettings;
 use player::PlayerPlugin;
 
@@ -19,6 +22,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         //.add_plugin(NetPlugin)
         .add_plugin(PlayerPlugin)
+        .add_plugin(EguiPlugin)
         .insert_resource(MovementSettings {
             sensitivity: 0.00015, // default: 0.00012
             speed: 12.0,          // default: 12.0
@@ -30,7 +34,8 @@ fn main() {
             safety_margin: std::time::Duration::from_micros(100),
             power_saver: PowerSaver::Enabled(Duration::from_millis(500)),
         })
-        .add_startup_system(setup.system())
+        .add_startup_system(setup)
+        .add_system(ui_example)
         .run();
 }
 
@@ -76,5 +81,19 @@ fn setup(
     commands.spawn_bundle(PointLightBundle {
         transform: Transform::from_xyz(4.0, 8.0, 4.0),
         ..Default::default()
+    });
+}
+
+fn ui_example(
+    mut egui_context: ResMut<EguiContext>
+) {
+    egui::Area::new("side_panel")
+        .show(egui_context.ctx_mut(), |ui| {
+            ui.label("world");
+            let button = egui::Button::new("Hellow");
+            ui.add(button);
+        });
+    egui::Window::new("Hello").show(egui_context.ctx_mut(), |ui| {
+        ui.label("world");
     });
 }
