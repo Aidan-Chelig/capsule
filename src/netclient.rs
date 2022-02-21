@@ -27,7 +27,7 @@ fn startup(mut net: ResMut<NetworkResource>) {
         if #[cfg(target_arch = "wasm32")] {
             // set the following address to your server address (i.e. local machine)
             // and remove compile_error! line
-            let mut server_address: SocketAddr = "127.0.0.1".parse().unwrap();
+            let mut server_address: SocketAddr = "127.0.0.1:0".parse().unwrap();
             server_address.set_port(SERVER_PORT);
         } else {
             let ip_address =

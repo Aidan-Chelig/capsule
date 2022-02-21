@@ -1,4 +1,9 @@
+
+
+use std::time::Duration;
+
 pub use bevy::prelude::*;
+use bevy_framepace::PowerSaver;
 
 mod netclient;
 use netclient::NetPlugin;
@@ -7,6 +12,29 @@ mod player;
 use player::MovementSettings;
 use player::PlayerPlugin;
 
+#[cfg(not(target_arch = "wasm32"))]
+fn main() {
+    App::new()
+        .insert_resource(Msaa { samples: 4 })
+        .add_plugins(DefaultPlugins)
+        //.add_plugin(NetPlugin)
+        .add_plugin(PlayerPlugin)
+        .insert_resource(MovementSettings {
+            sensitivity: 0.00015, // default: 0.00012
+            speed: 12.0,          // default: 12.0
+        })
+        .add_plugin(bevy_framepace::FramepacePlugin {
+            enabled: true,
+            framerate_limit: bevy_framepace::FramerateLimit::Auto,
+            warn_on_frame_drop: false,
+            safety_margin: std::time::Duration::from_micros(100),
+            power_saver: PowerSaver::Enabled(Duration::from_millis(500)),
+        })
+        .add_startup_system(setup.system())
+        .run();
+}
+
+#[cfg(target_arch = "wasm32")]
 fn main() {
     App::new()
         .insert_resource(Msaa { samples: 4 })
@@ -20,6 +48,7 @@ fn main() {
         .add_startup_system(setup.system())
         .run();
 }
+
 
 
 //test
