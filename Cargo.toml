@@ -12,6 +12,8 @@ bevy = {version = "0.6"}
 wasm-bindgen = {version = "0.2.78"}
 web-sys = {version = "0.3.55", features = ["WebSocket", "ErrorEvent", "MessageEvent", "BinaryType", "ProgressEvent", "Blob", "FileReader"]}
 js-sys = {version = "0.3.55"}
+bevy_networking_turbulence = { version = "0.4.1", default-features = false, features = ["use-webrtc"] }
+cfg-if = {version = "1.0.0"}
 
 [target.'cfg(target_os = "linux")'.dev-dependencies]
 bevy = { version = "0.6", default-features = false}

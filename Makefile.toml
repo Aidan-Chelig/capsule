@@ -1,14 +1,18 @@
 [env]
 ENV_DIR = {source="${CARGO_MAKE_PROFILE}", default_value = "debug", mapping = {release = "release"}}
 CARGO_TARGET_DIR = {value = "target", condition = {env_not_set = ["CARGO_TARGET_DIR"]}}
+
 TARGET_DIR = "wasm/target"
 CARGO_WASM_PATH = "${CARGO_TARGET_DIR}/wasm32-unknown-unknown/${ENV_DIR}/capsule.wasm"
-CARGO_PROFILE = "dev"
+CARGO_PROFILE = {value = "dev", condition = {env_not_set = ["CARGO_PROFILE"]}}
 CARGO_MANIFEST_DIR = "${CARGO_MAKE_WORKING_DIRECTORY}"
 ARG1 = "${@}"
 
 [env.release]
-CARGO_RELEASE_ARGS = "--release"
+CARGO_PROFILE = "release"
+
+[env.dev]
+CARGO_PROFILE = "dev"
 
 [tasks.install-wasm-bindgen-cli]
 install_crate = {crate_name = "wasm-bindgen-cli", binary = "wasm-bindgen", test_arg="--help"}
@@ -16,26 +20,34 @@ install_crate = {crate_name = "wasm-bindgen-cli", binary = "wasm-bindgen", test_
 [tasks.install-basic-http-server]
 install_crate = {crate_name = "basic-http-server", binary = "basic-http-server", test_arg="--help"}
 
-[tasks.cargo-build]
-args = ["build", "--target", "wasm32-unknown-unknown", "--${ENV_DIR}"]
+
+[tasks.cargo-build-wasm]
+args = ["build", "--target", "wasm32-unknown-unknown", "--profile",  "${CARGO_PROFILE}"]
 command = "cargo"
 
-[tasks.build-bind]
+[tasks.bind-wasm]
 args = ["--remove-name-section", "--remove-producers-section", "--out-dir", "${TARGET_DIR}", "--out-name", "wasm", "--target", "web", "--no-typescript", "${CARGO_WASM_PATH}"]
 command = "wasm-bindgen"
-dependencies = ["cargo-build", "install-wasm-bindgen-cli"]
+dependencies = ["cargo-build-wasm", "install-wasm-bindgen-cli"]
 
 [tasks.serve]
 command = "basic-http-server"
 args = ["wasm/"]
 dependencies = ["build-bind", "install-basic-http-server"]
 
-[tasks.watch-build]
+[tasks.watch-build-wasm]
 command = "watchexec"
-args = ["-w", "src/", "--restart", "cargo make --profile release build-bind", "-i wasm/"]
+args = ["-w", "src/", "--restart", "cargo make --profile ${CARGO_PROFILE} build-bind", "-i wasm/"]
 
-[tasks.dev]
-run_task = { name = ["watch-build", "serve"], parallel = true }
+[tasks.watch-run]
+command = "watchexec"
+args = ["-w", "src/", "--restart", "cargo run --profile ${CARGO_PROFILE} --features bevy/dynamic"]
+
+[tasks.devwasm]
+run_task = { name = ["watch-build-wasm", "serve"], parallel = true }
+
+[tasks.devnative]
+run_task = {name = ["watch-run"]}
 
 [tasks.test]
 disabled = true
