@@ -32,7 +32,7 @@ fn setup(
     // plane
     commands.spawn_bundle(PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Plane { size: 5.0 })),
-        material: materials.add(Color::rgb(1.0, 1.0, 0.4).into()),
+        material: materials.add(Color::rgb(1.0, 1.0, 0.7).into()),
         ..Default::default()
     });
     // cube

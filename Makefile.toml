@@ -33,11 +33,11 @@ dependencies = ["cargo-build-wasm", "install-wasm-bindgen-cli"]
 [tasks.serve]
 command = "basic-http-server"
 args = ["wasm/"]
-dependencies = ["build-bind", "install-basic-http-server"]
+dependencies = ["bind-wasm", "install-basic-http-server"]
 
 [tasks.watch-build-wasm]
 command = "watchexec"
-args = ["-w", "src/", "--restart", "cargo make --profile ${CARGO_PROFILE} build-bind", "-i wasm/"]
+args = ["-w", "src/", "--restart", "cargo make --profile ${CARGO_PROFILE} bind-wasm", "-i wasm/"]
 
 [tasks.watch-run]
 command = "watchexec"
