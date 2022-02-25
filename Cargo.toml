@@ -11,7 +11,7 @@ resolver = "2"
 #cpal = { version = "*", features = ["jack"] }
 bevy = {version = "0.6"}
 bevy_egui = "0.11"
-wasm-bindgen = {version = "0.2.78"}
+wasm-bindgen = {version = "0.2.79"}
 web-sys = {version = "0.3.55", features = ["WebSocket", "ErrorEvent", "MessageEvent", "BinaryType", "ProgressEvent", "Blob", "FileReader"]}
 js-sys = {version = "0.3.55"}
 bevy_networking_turbulence = { version = "0.4.1", default-features = false, features = ["use-webrtc"] }
@@ -19,7 +19,7 @@ cfg-if = {version = "1.0.0"}
 bevy_framepace = {version = "0.3.0"}
 
 [target.'cfg(target_os = "linux")'.dev-dependencies]
-bevy = { version = "0.6", default-features = false}
+bevy = { version = "0.6.1", default-features = false}
 
 [target.x86_64-unknown-linux-gnu]
 linker = "clang"

@@ -26,6 +26,7 @@ mkShell {
   latest.rustChannels.stable.cargo
   latest.rustChannels.stable.rust-src
   latest.rustChannels.stable.rustc
+  python3
   ];
 
   shellHook = ''
